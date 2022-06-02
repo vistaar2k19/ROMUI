@@ -1,0 +1,135 @@
+<div class="container-fluid">
+    <div class="row justify-content-center">
+    <div class="col-12 col-sm-6 col-md-4">
+     
+      
+        <ng-container [ngTemplateOutlet]="flag == 0 ? ReturnPage : flag == 1 ? packagingAndCharges : Message">
+        </ng-container>
+        
+
+        <ng-template #ReturnPage >
+            <form class="form-container" #returnProcessingForm="ngForm" (ngSubmit)="ReturnDetails(returnProcessingForm)" >
+                
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                    <h3 class="panel-title">Return Order Details</h3>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="NameLabel" for="Name" class="form"> Name  </label>
+                    <input id="Name" name="Name" type="text" class="form-control" ngModel #name="ngModel" required placeholder=" User name">
+                        <div *ngIf="name.invalid && (name.dirty || name.touched)" class="">
+                             <div *ngIf="name.errors?.['required']" class="alert-danger">
+                                 <span>Name is required</span>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="ContactLabel" for="ContactNumber" class="form">Contact  </label>
+                    <input id="ContactNumber" name="ContactNumber" type="text" class="form-control" ngModel #ContactNumber="ngModel" [ngModelOptions]="{ updateOn: 'blur' }" pattern="^[0-9]{10}$" required placeholder="Contact Number">
+                    <div *ngIf="ContactNumber.invalid && (ContactNumber.dirty || ContactNumber.touched)" class="alert-danger">
+                        <div *ngIf="ContactNumber.errors?.['required']">
+                          <span >Contact Number is required </span>
+                        </div>
+                        <div *ngIf="ContactNumber.errors?.['pattern']">
+                          <span>Only Numbers allowed (10 Digit) </span>
+                        </div>
+                      </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="ComponentTypeLabel" for="ComponentType" class="form" >Component Type  </label>
+                    <select id="ComponentType" name="ComponentType" ngModel #ComponentType="ngModel" required class="form-control" >
+                        <option value="" disabled selected hidden>Select Component</option>
+                        <option value="Integral">Integral</option>
+                        <option value="Accessory">Accessory</option>
+                    </select>
+                    <div *ngIf="ComponentType.invalid && (ComponentType.dirty || ComponentType.touched)" class="">
+                        <div *ngIf="ComponentType.errors?.['required']" class="alert-danger">
+                            <span>Component Type is required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="ComponentNameLabel" for="ComponentName" class="form">Component Name  </label>
+                    <input id="ComponentName" name="ComponentName" type="text"  class="form-control" ngModel #ComponentName="ngModel"  required placeholder="Component Name">
+                    <div *ngIf="ComponentName.invalid && (ComponentName.dirty || ComponentName.touched)" class="">
+                        <div *ngIf="ComponentName.errors?.['required']" class="alert-danger">
+                            <span>Component Name is required</span>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="form-group">
+                    <label id="QuantityLabel" for="Quantity" class="form">Quantity  </label>
+                    <input id="Quantity" name="Quantity" type="number" class="form-control" ngModel #Quantity="ngModel" required pattern="^[1-9][0-9]*$"  placeholder="Quantity">
+                    <div *ngIf="Quantity.invalid && (Quantity.dirty || Quantity.touched)" class="">
+                        <div *ngIf="Quantity.errors?.['required']" class="alert-danger">
+                            <span>Quantity is required</span>
+                        </div>
+                        <div *ngIf="Quantity.errors?.['pattern']">
+                            <span>Only natural numbers allowed </span>
+                          </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                <button id="submit" type="submit" [disabled]="!returnProcessingForm.valid"  class="btn btn-primary btn-block">Submit</button>
+                <button id="reset" type="reset" class="btn btn-danger">Reset</button>
+                </div>
+            </form>
+        </ng-template>
+
+    <ng-template #packagingAndCharges>
+        <form class="form-container" #returnconfirmationForm="ngForm" (ngSubmit)="CompleteProcessing(returnconfirmationForm)" >
+        
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Return Order Confirmation</h3>
+                </div>
+            </div>
+    
+            <div class="form-group">
+               <label id="RequestIdLabel" for="RequestId" class="form"> Request Id  </label>
+               <input id="RequestId" name="RequestId" type="text"  class="form-control" [(ngModel)]="data.requestId" disabled="true" required placeholder="Request Id">
+            </div>
+    
+            <div class="form-group">
+               <label id="ProcessingChargeLabel" for="ProcessingCharge" class="form">Processing Charge  </label>
+               <input id="ProcessingCharge" name="ProcessingCharge" type="text" class="form-control" [(ngModel)]="data.processingCharge" disabled="true"equired placeholder="Processing Charge">
+            </div>
+    
+            <div class="form-group">
+              <label id="PackagingandDeliveryChargeLabel" for="PackagingandDeliveryCharge" class="form">Packaging and Delivery Charge </label>
+              <input id="PackagingandDeliveryCharge" name="PackagingandDeliveryCharge" [(ngModel)]="data.packagingandDeliveryCharge" value="12" class="form-control" disabled="true">
+                  
+              </div>
+    
+             <div class="form-group">
+                <label id="DateOfDeliveryLabel" for="DateOfDelivery" class="form">Date of Delivery </label>
+                <input id="DateOfDelivery" name="DateOfDelivery" type="text" class="form-control" [(ngModel)]="data.dateOfDelivery" disabled="true" required placeholder="Date of Delivery">
+             </div> 
+    
+            <div class="form-group">
+            <button id="submit" type="submit" class="btn btn-primary btn-block">Submit</button>
+            <button id="cancel" type="text" class="btn btn-danger" (click)="router.navigate(['/'])" >Cancel</button>
+            </div>
+        </form>
+    </ng-template>
+    <ng-template #Message>
+    <div class="form-container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+            <h3 class="panel-title">Return Order submitted !</h3>
+            <div class="row justify-content-center"></div>
+            <button id="login" type="text" class="btn btn-primary "(click)="router.navigate(['/'])" >Home</button>
+            </div>
+        </div>
+    </div>
+    </ng-template>
+    </div>
+    </div>
+</div>
